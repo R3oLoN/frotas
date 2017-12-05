@@ -108,6 +108,9 @@ export default {
 		async listar(params = {}) {
 			try {
 				const { veiculos, total } = await listar(params, this.currentPage)
+				veiculos.forEach(veiculo => {
+					veiculo.selected = false
+				})
 				this.veiculos = veiculos
 				this.total = total
 				this.selectAll = false
