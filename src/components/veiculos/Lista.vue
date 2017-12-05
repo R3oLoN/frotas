@@ -8,6 +8,23 @@
 			<transition enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
 				<button class="btn danger" :disabled="!hasSelected || excluindo" @click="excluir" v-if="contSelected > 0">Excluir Carro</button>
 			</transition>
+			<div></div>
+			<div class="group right">
+				<input type="text" v-model="searchQuery">
+				<div class="filterOptions">
+					<label for="searchByMarca">
+						<input type="checkbox" v-model="searchByMarca" id="searchByMarca">
+						Filtar por marca.
+					</label>
+					<label for="searchByCombustivel">
+						<input type="checkbox" v-model="searchByCombustivel" id="searchByCombustivel">
+						Filtar por combustível.
+					</label>
+				</div>
+				<button class="btn" @click="search">
+					<i class="fa fa-search"></i>
+				</button>
+			</div>
 		</div>
 		<div class="row">
 			<table>
@@ -64,12 +81,15 @@ export default {
 			currentPage: 1,
 			total: 0,
 			veiculos: [],
-			excluindo: false
+			excluindo: false,
+			searchQuery: '',
+			searchByMarca: false,
+			searchByCombustivel: false
 		}
 	},
 	methods: {
 		selectRow(veiculo) {
-			if (this.selectAll && !veiculo.selected) {
+			if (!veiculo.selected) {
 				this.selectAll = false
 			}
 			for (const v of this.veiculos) {
@@ -82,13 +102,13 @@ export default {
 			}
 		},
 		selectAllChange() {
-			this.veiculos.forEach(veiculo => {
+			for (const veiculo of this.veiculos) {
 				veiculo.selected = this.selectAll
-			})
+			}
 		},
-		async listar() {
+		async listar(params = {}) {
 			try {
-				const { veiculos, total } = await listar({}, this.currentPage)
+				const { veiculos, total } = await listar(params, this.currentPage)
 				this.veiculos = veiculos
 				this.total = total
 				this.selectAll = false
@@ -105,6 +125,21 @@ export default {
 			}
 			this.excluindo = false
 			this.listar()
+		},
+		search() {
+			let filter = {}
+			if (this.searchQuery) {
+				if (this.searchByMarca) {
+					filter.marca_like = this.searchQuery
+				}
+				if (this.searchByCombustivel) {
+					filter.combustivel_like = this.searchQuery
+				}
+				if (!this.searchByCombustivel && !this.searchByMarca) {
+					filter.q = this.searchQuery
+				}
+			}
+			this.listar(filter)
 		},
 		prev() {
 			this.currentPage--
@@ -261,6 +296,12 @@ table tbody td {
 table thead th.select,
 table tbody td.select {
   text-align: center;
+}
+
+table tbody td.select input[type="checkbox"],
+table thead th.select input[type="checkbox"] {
+  height: 18px;
+  width: 18px;
 }
 
 table thead th.number,
