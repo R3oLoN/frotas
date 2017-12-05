@@ -31,7 +31,7 @@
 				<thead>
 					<tr>
 						<th class="select">
-							<input type="checkbox" v-model="selectAll" @change="selectAllChange()">
+							<input type="checkbox" :value="true" v-model="selectAll" @change="selectAllChange">
 						</th>
 						<th>Placa</th>
 						<th>Modelo</th>
@@ -42,20 +42,22 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr v-for="veiculo in veiculos" :class="{'selected-row': veiculo.selected}" :key="veiculo.id">
-						<td class="select">
-							<input type="checkbox" v-model="veiculo.selected" @change="selectRow(veiculo)">
-						</td>
-						<td>{{ veiculo.placa }}</td>
-						<td>{{ veiculo.modelo }}</td>
-						<td>{{ veiculo.marca }}</td>
-						<td>
-							<a :href="veiculo.imagem" target="blank" v-if="veiculo.imagem">imagem</a>
-							<span v-else>Sem foto</span>
-						</td>
-						<td>{{ veiculo.combustivel }}</td>
-						<td class="number">{{ veiculo.valor | currency }}</td>
-					</tr>
+					<template v-for="veiculo in veiculos">
+						<tr :key="veiculo.id" :class="{'selected-row': veiculo.selected}">
+							<td class="select">
+								<input type="checkbox" :value="true" v-model="veiculo.selected" @change="selectRow">
+							</td>
+							<td>{{ veiculo.placa }}</td>
+							<td>{{ veiculo.modelo }}</td>
+							<td>{{ veiculo.marca }}</td>
+							<td>
+								<a :href="veiculo.imagem" target="blank" v-if="veiculo.imagem">imagem</a>
+								<span v-else>Sem foto</span>
+							</td>
+							<td>{{ veiculo.combustivel }}</td>
+							<td class="number">{{ veiculo.valor | currency }}</td>
+						</tr>
+					</template>
 				</tbody>
 			</table>
 		</div>
@@ -88,10 +90,7 @@ export default {
 		}
 	},
 	methods: {
-		selectRow(veiculo) {
-			if (!veiculo.selected) {
-				this.selectAll = false
-			}
+		selectRow() {
 			for (const v of this.veiculos) {
 				if (v.selected) {
 					this.selectAll = true
