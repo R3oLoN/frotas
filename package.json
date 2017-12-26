@@ -18,7 +18,7 @@
     "animate.css": "^3.5.2",
     "axios": "^0.17.1",
     "font-awesome": "^4.7.0",
-    "vee-validate": "^2.0.0-rc.25",
+    "vee-validate": "2.0.0-rc.25",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1"
   },
@@ -94,8 +94,8 @@
     "webpack-merge": "^4.1.0"
   },
   "engines": {
-    "node": ">= 4.0.0",
-    "npm": ">= 3.0.0"
+    "node": ">= 8.9.1",
+    "npm": ">= 5.5.1"
   },
   "browserslist": [
     "> 1%",
